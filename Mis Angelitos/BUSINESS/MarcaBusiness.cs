@@ -21,19 +21,25 @@ namespace Mis_Angelitos.BUSINESS
             _comando.Connection = _conexion;
         }
 
-        /*public void Create(string nombre)
+       public void Create(string nombre)
         {
-                var marca = _context.Marcas.Where(x => x.Nombre == nombre).SingleOrDefault();
-                if (marca == null)
-                {
-                    var nuevaMarca = new Marca()
-                    {
-                        Nombre = nombre
-                    };
-                    _context.Marcas.Add(nuevaMarca);
-                    _context.SaveChanges();
-                }
-        }*/
+            try
+            {
+                _comando.CommandText = "insert into Marcas values (@nombre)";
+                _comando.Parameters.Clear();
+                _comando.Parameters.AddWithValue("@nombre", nombre);
+                _conexion.Open();
+                _comando.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conexion.Close();
+            } 
+        }
 
         public List<Marca> GetMarcas()
         {

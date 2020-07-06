@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -10,6 +11,10 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { MarcasComponent } from './marcas/marcas.component';
+
+import {MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
+import { MarcaService } from './servicios/marca.service';
 
 @NgModule({
   declarations: [
@@ -28,9 +33,12 @@ import { MarcasComponent } from './marcas/marcas.component';
       { path: '', component: MarcasComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-    ])
+    ]),
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatButtonModule
   ],
-  providers: [],
+  providers: [MarcaService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

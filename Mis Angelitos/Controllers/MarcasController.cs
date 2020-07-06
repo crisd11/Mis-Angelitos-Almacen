@@ -15,17 +15,23 @@ namespace Mis_Angelitos.Controllers
     {
         private MarcaBusiness _marcasBusiness;
 
-        //private readonly AngelitosContext context;
-
-        /*public MarcaController()
+        public MarcasController()
         {
-            _marcaBusiness = new MarcaBusiness();
+            _marcasBusiness = new MarcaBusiness();
         }
 
+        [Route("getmarcas")]
         [HttpGet]
         public IEnumerable<Marca> GetMarcas()
         {
-            return new Marca();//_marcaBusiness.GetMarcas();
-        }*/
+            return _marcasBusiness.GetMarcas();
+        }
+
+        [Route("create/{nombre}")]
+        [HttpPost]
+        public void Create(string nombre) 
+        {
+            _marcasBusiness.Create(nombre);
+        }
     }
 }

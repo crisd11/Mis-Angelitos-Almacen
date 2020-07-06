@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Marca } from '../data-models/marca';
+import { MarcaService } from '../servicios/marca.service';
 
 @Component({
   selector: 'app-marcas',
@@ -7,9 +10,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MarcasComponent implements OnInit {
 
-  constructor() { }
+  marcaToInsert: string;
+  marcas: Marca[];
+  displayedColumns = ['nombre'];
 
-  ngOnInit() {
+  constructor(private marcaService: MarcaService) { 
+    this.marcaToInsert = "a";
+    this.marcas = [];
   }
 
+  ngOnInit(){
+    this.getMarcas();
+  }
+
+  getMarcas(): void {
+    this.marcaService.getMarcas().subscribe(resp => {
+    this.marcas = resp;
+    })
+  }
+
+  create(){
+    if(this.marcaToInsert != ""){
+      console.log(this.marcaToInsert);
+      this.marcaService.create(this.marcaToInsert).subscribe(resp => {  
+      })
+    }
+  }
 }
