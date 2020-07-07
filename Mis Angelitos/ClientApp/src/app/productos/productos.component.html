@@ -1,0 +1,118 @@
+<div>
+  <h3>PRODUCTOS</h3>
+  <div class="row">
+    <div style="width: 30%; margin: 0px; background-color: aqua; height: 130px;">
+      <h5>Filtros</h5>
+      <label>Nombre:</label>
+      <input [(ngModel)]="productoFilter" maxlength="50">
+      <label class="">TipoProducto: </label>
+          <select [(ngModel)]="idTipoFilter" style="width: 100px;">
+            <option *ngFor='let tipo of tipoProductos' [ngValue]="tipo.Id">
+                {{tipo.Nombre}}
+            </option>
+          </select>
+          <button>Buscar</button>
+    </div>
+    <div style="width: 60%; margin-left: 100px; background-color: aqua;">
+      <form [formGroup]="form">
+        <div class="row">
+          <mat-form-field style="margin-left: 15px;">
+            <input matInput formControlName="nombre" placeholder="Nombre">
+            <mat-error>El campo no puede quedar vacio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field style="margin-left: 15px;">
+            <input matInput formControlName="stock" placeholder="Stock a Ingresar">
+            <mat-error *ngIf="form.controls['stock'].errors?.required">Ingrese la cantidad que dispone del producto</mat-error>
+            <mat-error *ngIf="form.controls['stock'].errors?.pattern">El campo solo acepta numeros</mat-error>
+          </mat-form-field>
+
+          <mat-form-field style="margin-left: 15px;">
+            <input matInput formControlName="porcentajeGanancia" placeholder="% Ganancia">
+            <mat-error *ngIf="form.controls['porcentajeGanancia'].errors?.required">Se necesita un porcentaje de ganancia para el producto</mat-error>
+            <mat-error *ngIf="form.controls['porcentajeGanancia'].errors?.pattern">El campo solo acepta numeros</mat-error>
+          </mat-form-field>
+
+          <mat-form-field style="margin-left: 15px; width: 30%;">
+            <mat-select formControlName="tipoProducto" placeholder="Tipo de Producto">
+              <mat-option *ngFor="let tipo of tipoProductos" [value]="tipo.Id">
+                {{tipo.Nombre}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field style="margin-left: 15px; width: 30%;">
+            <mat-select formControlName="marca" placeholder="Marca">
+              <mat-option *ngFor="let marca of marcas" [value]="marca.id">
+                {{marca.nombre}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button style="margin-left: 70px;" mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Crear Producto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="mat-elevation-z8">
+  <table mat-table class="full-width-table" matSort aria-label="Elements" [dataSource]="productos">
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+      <td mat-cell *matCellDef="let row">{{row.nombre}}</td>
+    </ng-container>
+
+    <!-- Marca Column -->
+    <ng-container matColumnDef="marca">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Marca</th>
+      <td mat-cell *matCellDef="let row">{{row.marca.nombre}}</td>
+    </ng-container>
+
+    <!-- TipoProducto Column -->
+    <ng-container matColumnDef="tipoProducto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>TipoProducto</th>
+      <td mat-cell *matCellDef="let row">{{row.tipoProducto.nombre}}</td>
+    </ng-container>
+
+    <!-- Stock Column -->
+    <ng-container matColumnDef="stock">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
+      <td mat-cell *matCellDef="let row">{{row.stock}}</td>
+    </ng-container>
+
+    <!-- PorcentajeGanancia Column -->
+    <ng-container matColumnDef="porcentajeGanancia">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>PorcentajeGanancia</th>
+      <td mat-cell *matCellDef="let row">{{row.porcentajeGanancia}}</td>
+    </ng-container>
+
+    <!-- PorUnidad Column -->
+    <ng-container matColumnDef="porUnidad">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Por Unidad</th>
+      <td mat-cell *matCellDef="let row">{{row.porUnidad}}</td>
+    </ng-container>
+
+    <!-- Historico Column -->
+    <ng-container matColumnDef="historico">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Historico Vendido</th>
+      <td mat-cell *matCellDef="let row">{{row.historicoVendido}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+<!-- Historico Column 
+  <mat-paginator #paginator
+      [length]="dataSource?.data.length"
+      [pageIndex]="0"
+      [pageSize]="50"
+      [pageSizeOptions]="[25, 50, 100, 250]">
+  </mat-paginator>-->
+</div>
