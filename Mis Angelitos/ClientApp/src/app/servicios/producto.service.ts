@@ -14,4 +14,8 @@ export class ProductoService {
     return this.httpClient.get<Producto[]>('https://localhost:44365/productos/getproductos');
   }
 
+  public create(data: string): Observable<any> {
+    return this.httpClient.post('https://localhost:44365/productos/create' + data, null);
+  }
+
 }

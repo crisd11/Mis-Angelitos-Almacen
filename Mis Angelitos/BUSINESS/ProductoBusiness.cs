@@ -21,13 +21,20 @@ namespace Mis_Angelitos.BUSINESS
             _comando.Connection = _conexion;
         }
 
-        public void Create(string nombre)
+        public void Create(string nombre, int idMarca, int tipoProducto, float stock, float porcentaje)
         {
             try
             {
-                _comando.CommandText = "insert into Marcas values (@nombre)";
+                _comando.CommandText = "insert into Productos values (@nombre, @idMarca, @tipoProducto, @stock, @porcentajeGanancia, @porUnidad, @HistoricoVendido)";
                 _comando.Parameters.Clear();
                 _comando.Parameters.AddWithValue("@nombre", nombre);
+                _comando.Parameters.AddWithValue("@idMarca", idMarca);
+                _comando.Parameters.AddWithValue("@tipoProducto", tipoProducto);
+                _comando.Parameters.AddWithValue("@stock", stock);
+                _comando.Parameters.AddWithValue("@porcentajeGanancia", porcentaje);
+                _comando.Parameters.AddWithValue("@porUnidad", true);
+                _comando.Parameters.AddWithValue("@HistoricoVendido", 0);
+                
                 _conexion.Open();
                 _comando.ExecuteNonQuery();
             }
@@ -71,9 +78,9 @@ namespace Mis_Angelitos.BUSINESS
                         Nombre = Enum.GetName(typeof(TipoProductoE),_lector.GetInt32(3))
                     };
                     producto.Stock = _lector.GetFloat(4);
-                    producto.HistoricoVendido = _lector.GetFloat(5);
+                    producto.PorcentajeGanancia = _lector.GetFloat(5);
                     producto.PorUnidad = _lector.GetBoolean(6);
-                    producto.PorcentajeGanancia = _lector.GetFloat(7);
+                    producto.HistoricoVendido = _lector.GetFloat(7);
                     productos.Add(producto);
                 }
                 return productos;

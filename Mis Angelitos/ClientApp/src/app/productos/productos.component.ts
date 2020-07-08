@@ -21,6 +21,7 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
   @ViewChild(MatTable, {static: false}) table: MatTable<Producto>;
   dataSource: ProductosDataSource;*/
 
+  newProducto: Producto;
   productos: Producto[];
   productoFilter: string;
   idTipoFilter: number;
@@ -32,9 +33,12 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
   marcas: Marca[];
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'nombre', 'marca', 'tipoProducto', 'stock', 'porcentajeGanancia', 'porUnidad'];
+  displayedColumns = ['id', 'nombre', 'marca', 'tipoProducto', 'stock', 'porcentajeGanancia', 'historicoVendido'];
 
   constructor(private marcaService: MarcaService, private productoService: ProductoService){
+    this.newProducto = new Producto();
+    this.newProducto.marca = new Marca();
+    this.newProducto.tipoProducto = new TipoProducto();
     this.productos = [];
     this.productoFilter = "";
     this.tipoProductos = [];
@@ -42,8 +46,8 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
     this.porUnidadOpciones = [];
       for(var i=0; i<4 ; i++){
       this.tipoProducto = new TipoProducto();
-      this.tipoProducto.Id = i;
-      this.tipoProducto.Nombre = TipoProductoEnum[i];
+      this.tipoProducto.id = i;
+      this.tipoProducto.nombre = TipoProductoEnum[i];
       this.tipoProductos.push(this.tipoProducto)
       }
       this.form = new FormGroup({
@@ -57,8 +61,8 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
     }
 
   ngOnInit() {
-    this.getMarcas();
-    this.getProductos();
+    this.GetMarcas();
+    this.GetProductos();
   }
 
   /*ngAfterViewInit() {
@@ -67,15 +71,25 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
     this.table.dataSource = this.dataSource;
   }*/
 
-  getMarcas(): void {
+  GetMarcas(): void {
     this.marcaService.getMarcas().subscribe(resp => {
     this.marcas = resp;
     })
   }
 
-  getProductos(): void {
+  GetProductos(): void {
     this.productoService.getProductos().subscribe(resp => {
       this.productos = resp;
+    })
+  }
+
+  Create(){
+    let data = '?nombre=' + this.newProducto.nombre + '&idMarca=' + this.newProducto.marca.id +
+               '&tipoProducto=' + this.newProducto.tipoProducto.id + '&stock=' + this.newProducto.stock + '&porcentaje=' + this.newProducto.porcentajeGanancia;
+      //let data =  '?' + this.newProducto.nombre + '/' + this.newProducto.marca.id +
+      //'/' + this.newProducto.tipoProducto.id + '/' + this.newProducto.stock + '/' + this.newProducto.porcentajeGanancia;
+      
+    this.productoService.create(data).subscribe(resp => {  
     })
   }
 }

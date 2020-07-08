@@ -26,5 +26,12 @@ namespace Mis_Angelitos.Controllers
         {
             return _productosBusiness.GetProductos();
         }
+
+        [Route("create")]
+        [HttpPost]
+        public void Create([FromQuery]string nombre, [FromQuery]int idMarca, [FromQuery]int tipoProducto, [FromQuery]float stock, [FromQuery]float porcentaje)
+        {
+            _productosBusiness.Create(nombre,idMarca,tipoProducto,stock,porcentaje);
+        }
     }
 }

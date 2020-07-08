@@ -14,35 +14,35 @@
           <button>Buscar</button>
     </div>
     <div style="width: 60%; margin-left: 100px; background-color: aqua;">
-      <form [formGroup]="form">
+      <form [formGroup]="form" (submit)="Create()">
         <div class="row">
           <mat-form-field style="margin-left: 15px;">
-            <input matInput formControlName="nombre" placeholder="Nombre">
+            <input matInput formControlName="nombre" placeholder="Nombre" [(ngModel)]="newProducto.nombre">
             <mat-error>El campo no puede quedar vacio</mat-error>
           </mat-form-field>
 
           <mat-form-field style="margin-left: 15px;">
-            <input matInput formControlName="stock" placeholder="Stock a Ingresar">
+            <input matInput formControlName="stock" placeholder="Stock a Ingresar" [(ngModel)]="newProducto.stock">
             <mat-error *ngIf="form.controls['stock'].errors?.required">Ingrese la cantidad que dispone del producto</mat-error>
             <mat-error *ngIf="form.controls['stock'].errors?.pattern">El campo solo acepta numeros</mat-error>
           </mat-form-field>
 
           <mat-form-field style="margin-left: 15px;">
-            <input matInput formControlName="porcentajeGanancia" placeholder="% Ganancia">
+            <input matInput formControlName="porcentajeGanancia" placeholder="% Ganancia" [(ngModel)]="newProducto.porcentajeGanancia">
             <mat-error *ngIf="form.controls['porcentajeGanancia'].errors?.required">Se necesita un porcentaje de ganancia para el producto</mat-error>
             <mat-error *ngIf="form.controls['porcentajeGanancia'].errors?.pattern">El campo solo acepta numeros</mat-error>
           </mat-form-field>
 
           <mat-form-field style="margin-left: 15px; width: 30%;">
-            <mat-select formControlName="tipoProducto" placeholder="Tipo de Producto">
-              <mat-option *ngFor="let tipo of tipoProductos" [value]="tipo.Id">
-                {{tipo.Nombre}}
+            <mat-select formControlName="tipoProducto" placeholder="Tipo de Producto" [(ngModel)]="newProducto.tipoProducto.id">
+              <mat-option *ngFor="let tipo of tipoProductos" [value]="tipo.id">
+                {{tipo.nombre}}
               </mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-form-field style="margin-left: 15px; width: 30%;">
-            <mat-select formControlName="marca" placeholder="Marca">
+            <mat-select formControlName="marca" placeholder="Marca" [(ngModel)]="newProducto.marca.id">
               <mat-option *ngFor="let marca of marcas" [value]="marca.id">
                 {{marca.nombre}}
               </mat-option>
@@ -100,7 +100,7 @@
     </ng-container>
 
     <!-- Historico Column -->
-    <ng-container matColumnDef="historico">
+    <ng-container matColumnDef="historicoVendido">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Historico Vendido</th>
       <td mat-cell *matCellDef="let row">{{row.historicoVendido}}</td>
     </ng-container>

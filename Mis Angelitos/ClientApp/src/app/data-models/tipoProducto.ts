@@ -1,6 +1,6 @@
 export class TipoProducto {
-    Id : number;
-    Nombre: string;
+    id : number;
+    nombre: string;
 }
 
 export enum TipoProductoEnum {
