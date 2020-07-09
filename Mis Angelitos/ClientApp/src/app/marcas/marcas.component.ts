@@ -15,7 +15,7 @@ export class MarcasComponent implements OnInit {
   displayedColumns = ['nombre'];
 
   constructor(private marcaService: MarcaService) { 
-    this.marcaToInsert = "a";
+    this.marcaToInsert = "";
     this.marcas = [];
   }
 
@@ -33,6 +33,7 @@ export class MarcasComponent implements OnInit {
     if(this.marcaToInsert != ""){
       console.log(this.marcaToInsert);
       this.marcaService.create(this.marcaToInsert).subscribe(resp => {  
+        this.getMarcas();
       })
     }
   }

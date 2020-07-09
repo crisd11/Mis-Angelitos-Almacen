@@ -7,8 +7,8 @@
       <input [(ngModel)]="productoFilter" maxlength="50">
       <label class="">TipoProducto: </label>
           <select [(ngModel)]="idTipoFilter" style="width: 100px;">
-            <option *ngFor='let tipo of tipoProductos' [ngValue]="tipo.Id">
-                {{tipo.Nombre}}
+            <option *ngFor='let tipo of tipoProductos' [ngValue]="tipo.id">
+                {{tipo.nombre}}
             </option>
           </select>
           <button>Buscar</button>

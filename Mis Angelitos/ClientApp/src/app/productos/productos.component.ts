@@ -90,6 +90,7 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
       //'/' + this.newProducto.tipoProducto.id + '/' + this.newProducto.stock + '/' + this.newProducto.porcentajeGanancia;
       
     this.productoService.create(data).subscribe(resp => {  
+      this.GetProductos();
     })
   }
 }

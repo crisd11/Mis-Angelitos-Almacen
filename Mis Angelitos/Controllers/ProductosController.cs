@@ -22,7 +22,7 @@ namespace Mis_Angelitos.Controllers
 
         [Route("getproductos")]
         [HttpGet]
-        public IEnumerable<Producto> GetMarcas()
+        public IEnumerable<Producto> GetProductos()
         {
             return _productosBusiness.GetProductos();
         }

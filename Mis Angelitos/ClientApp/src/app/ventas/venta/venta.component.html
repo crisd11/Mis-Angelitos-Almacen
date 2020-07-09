@@ -1,0 +1,59 @@
+<!-- <app-detalle-venta (onSubmitDetalle)="agregarDetalle($event)"></app-detalle-venta> -->
+<form autocomplete="off" *ngIf="ventaForm">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Venta No.</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">#</div>
+                    </div>
+                    <input class="form-control" readonly>
+                </div> 
+            </div>
+            <div class="form-group">
+                <label>Cantidad Items</label>
+                <input class="form-control" readonly [(ngModel)]="cantidadItems" name="cantidadItems"> 
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Fecha</label>
+                <input class="form-control" readonly [(ngModel)]="fecha" name="fechaVenta">
+            </div>
+            <div class="form-group">
+                <label>Total de Venta</label>
+                <input class="form-control" readonly [(ngModel)]="ventaForm.precioTotalVenta" name="totalVenta">
+            </div>
+        </div>
+        <table class="table table-borderless">
+            <thead class="thead-light">
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th>
+                    <a class="btn btn-sm btn-success text-white" (click)="agregarEditarDetalle(null,1)"><i class="fa fa-plus">Agregar Detalle</i></a> 
+                </th>
+            </thead>
+            <tbody>
+                <tr *ngIf="detallesVenta.length==0" colspan="5">
+                    <td class="font-italic text-center">
+                        No hay detalles en esta venta
+                    </td>
+                </tr>
+                <tr *ngFor="let detalle of detallesVenta; let i=index">
+                    <td>{{detalle.producto.nombre}}</td>
+                    <td>{{detalle.precio}}</td>
+                    <td>{{detalle.cantidadVendida}}</td>
+                    <td>{{detalle.total}}</td>
+                    <td><a class="btn btn-sm btn-info text-white" (click)="agregarEditarDetalle(i,1)"><i class="fa fa-pencil">Editar Detalle</i></a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-dark"><i class="fa fa-database"></i> Cerrar Venta</button>
+        </div>
+    </div>
+</form>

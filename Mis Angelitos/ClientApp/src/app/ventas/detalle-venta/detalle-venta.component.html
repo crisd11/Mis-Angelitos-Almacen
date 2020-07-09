@@ -1,0 +1,74 @@
+<h4 class="display-4"> Nuevo Detalle </h4>
+<hr>
+<form [formGroup]="form" (submit)="onSubmit()">
+    <div class="row">
+      <mat-form-field style="margin-left: 15px; width: 30%;">
+        <mat-select formControlName="producto" placeholder="Producto" [(ngModel)]="newDetalleVenta.producto">
+          <mat-option *ngFor="let producto of productos" [value]="producto">
+            {{producto.nombre}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field style="margin-left: 15px;">
+        <input matInput formControlName="precio" placeholder="Precio" [(ngModel)]="newDetalleVenta.precio" (keyup)="updateTotal()">
+        <mat-error *ngIf="form.controls['precio'].errors?.required">Se necesita para calcular el total del detalle</mat-error>
+        <mat-error *ngIf="form.controls['precio'].errors?.pattern">El campo solo acepta numeros</mat-error>
+      </mat-form-field>
+    </div>
+      <div class="row">
+      <mat-form-field style="margin-left: 15px;">
+        <input matInput formControlName="cantidad" placeholder="Cantidad" [(ngModel)]="newDetalleVenta.cantidadVendida" (keyup)="updateTotal()">
+        <mat-error *ngIf="form.controls['cantidad'].errors?.required">Se necesita para calcular el total del detalle</mat-error>
+        <mat-error *ngIf="form.controls['cantidad'].errors?.pattern">El campo solo acepta numeros</mat-error>
+      </mat-form-field>
+
+      <mat-form-field style="margin-left: 15px;">
+        <mat-label>Total</mat-label>
+        <input matInput formControlName="total" [(ngModel)]="newDetalleVenta.total" readonly style="background-color: rgb(252, 64, 64);">
+      </mat-form-field>
+
+      <button style="margin-left: 70px;" mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Agregar Detalle</button>
+    </div>
+  </form>
+<!--
+<form #form="ngForm" autocomplete="off" (submit)="onSubmit()">
+    <div class="form-row">
+    <div class="form-group">
+        <label>Producto</label>
+        <select name="ProductoID" #ProductoID [(ngModel)]="newDetalleVenta.producto" class="form-control">[class.is.invalid]="!isValid && newDetalleVenta.producto.id"-->
+           <!-- <option>-Select-</option>
+            <option *ngFor="let producto of productos" value="{{producto}}">{{producto.nombre}}</option>
+        </select>
+    </div>
+    </div>
+    <div class="form-row">
+    <div class="form-group col-md-6">
+        <label>Precio</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text">$</div>
+            </div>
+            <input name="Precio" #Price="ngModel" [(ngModel)]="newDetalleVenta.precio" class="form-control" (keyup)="updateTotal()" [class.is.invalid]="!isValid && newDetalleVenta.precio">
+        </div>
+    </div>
+    <div class="form-group col-md-6">
+        <label>Cantidad</label>
+        <input name="Cantidad" #Cantidad="ngModel" [(ngModel)]="newDetalleVenta.cantidadVendida" class="form-control" 
+        (keyup)="updateTotal()" [class.is.invalid]="!isValid && newDetalleVenta.cantidadVendida">
+    </div>
+    </div>
+    <div class="form-group">
+        <label>Total</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text">$</div>
+            </div>
+            <input name="Total" #Total="ngModel" [(ngModel)]="newDetalleVenta.total" class="form-control" readonly>
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-dark"><i class="fa fa-database"></i> Agregar </button>
+        <button type="button" class="btn btn-outline-dark ml-1" [mat-dialog-close]><i class="fa fa-close"></i> Cerrar</button>
+    </div>
+</form> -->
