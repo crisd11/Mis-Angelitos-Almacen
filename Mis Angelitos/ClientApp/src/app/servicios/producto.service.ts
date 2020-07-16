@@ -18,4 +18,12 @@ export class ProductoService {
     return this.httpClient.post('https://localhost:44365/productos/create' + data, null);
   }
 
+  public edit(data: string): Observable<any> {
+    return this.httpClient.post('https://localhost:44365/productos/edit'+ data, null);
+  }
+
+  public delete(data: string): Observable<any> {
+    return this.httpClient.post('https://localhost:44365/productos/delete'+ data, null);
+  }
+
 }

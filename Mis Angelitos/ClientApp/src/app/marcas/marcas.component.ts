@@ -11,12 +11,14 @@ import { MarcaService } from '../servicios/marca.service';
 export class MarcasComponent implements OnInit {
 
   marcaToInsert: string;
+  idMarcaToEdit: number;
   marcas: Marca[];
-  displayedColumns = ['nombre'];
+  displayedColumns = ['id','nombre','editar','eliminar'];
 
   constructor(private marcaService: MarcaService) { 
     this.marcaToInsert = "";
     this.marcas = [];
+    this.idMarcaToEdit = 0;
   }
 
   ngOnInit(){
@@ -34,7 +36,31 @@ export class MarcasComponent implements OnInit {
       console.log(this.marcaToInsert);
       this.marcaService.create(this.marcaToInsert).subscribe(resp => {  
         this.getMarcas();
+        this.marcaToInsert = "";
       })
     }
+  }
+
+  editar(marca: Marca){
+    this.marcaToInsert = marca.nombre;
+    this.idMarcaToEdit = marca.id;
+  }
+
+  editarMarca(){
+    let data = '?nombre=' + this.marcaToInsert + '&id=' + this.idMarcaToEdit;
+    if(this.idMarcaToEdit != 0){
+      this.marcaService.edit(data).subscribe(resp => {  
+        this.getMarcas();
+        this.idMarcaToEdit = 0;
+        this.marcaToInsert = "";
+      })
+    }
+  }
+
+  eliminar(id: number){
+    let data = '?id=' + id;
+    this.marcaService.delete(data).subscribe(resp => {  
+      this.getMarcas();
+    })
   }
 }

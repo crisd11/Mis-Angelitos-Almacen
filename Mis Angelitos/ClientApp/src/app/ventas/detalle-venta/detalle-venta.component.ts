@@ -13,7 +13,7 @@ import { VentaService } from '../../servicios/venta.service';
 })
 export class DetalleVentaComponent implements OnInit {
 
-  form: FormGroup;
+  Detalleform: FormGroup;
   newDetalleVenta: DetalleVenta;
   productos: Producto[];
   isValid: boolean;
@@ -30,7 +30,7 @@ export class DetalleVentaComponent implements OnInit {
 
     this.productos = [];
 
-    this.form = new FormGroup({
+    this.Detalleform = new FormGroup({
       producto: new FormControl('', Validators.required),
       precio: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
       cantidad: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
@@ -40,14 +40,6 @@ export class DetalleVentaComponent implements OnInit {
 
   ngOnInit() {
     this.GetProductos();
-    
-    if(this.data.detalleIndex == null){
-      this.newDetalleVenta.id = 0;
-      this.newDetalleVenta.total = 0;
-    }
-    else{
-      this.newDetalleVenta = this.ventaService.detalleVentas[this.data.detalleIndex];
-    }
   }
 
   GetProductos(): void {
@@ -56,20 +48,7 @@ export class DetalleVentaComponent implements OnInit {
     })
   }
 
-  updateTotal(){
-    this.newDetalleVenta.total = parseFloat((this.newDetalleVenta.precio * this.newDetalleVenta.cantidadVendida).toFixed(2));
-  }
-
-  onSubmit(){
-    //if(this.validateForm(this.newDetalleVenta.value))
-    this.dialogRef.close(this.newDetalleVenta);
-  }
-
-  Create(){
-    //if(this.validateForm(this.newDetalleVenta.value))
-    this.ventaService.detalleVentas.push(this.newDetalleVenta);
-    this.dialogRef.close();
-  }
+  
 
   validateForm(form: DetalleVenta){
     this.isValid = true;

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mis_Angelitos.BUSINESS;
 using Mis_Angelitos.DOMAIN;
+using Mis_Angelitos.DOMAIN.Request;
 
 namespace Mis_Angelitos.Controllers
 {
@@ -29,9 +30,9 @@ namespace Mis_Angelitos.Controllers
 
         [Route("create")]
         [HttpPost]
-        public void Create([FromQuery] string nombre, [FromQuery] int idMarca, [FromQuery] int tipoProducto, [FromQuery] float stock, [FromQuery] float porcentaje)
+        public void Create(Venta_RegistrarRequest request)
         {
-            _ventasBusiness.Create(nombre, idMarca, tipoProducto, stock, porcentaje);
+            _ventasBusiness.RegistrarVenta(request.DetalleVentas, request.Venta);
         }
     }
 }

@@ -33,5 +33,19 @@ namespace Mis_Angelitos.Controllers
         {
             _marcasBusiness.Create(nombre);
         }
+
+        [Route("edit")]
+        [HttpPost]
+        public void Edit([FromQuery] string nombre, [FromQuery] int id)
+        {
+            _marcasBusiness.Editar(nombre, id);
+        }
+
+        [Route("delete")]
+        [HttpPost]
+        public void Eliminar([FromQuery] int id)
+        {
+            _marcasBusiness.Eliminar(id);
+        }
     }
 }

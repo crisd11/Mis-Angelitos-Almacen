@@ -1,4 +1,6 @@
 <!-- <app-detalle-venta (onSubmitDetalle)="agregarDetalle($event)"></app-detalle-venta> -->
+<div class="row">
+<div style="width: 700px;">
 <form autocomplete="off" *ngIf="ventaForm">
     <div class="row">
         <div class="col-md-6">
@@ -8,7 +10,7 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text">#</div>
                     </div>
-                    <input class="form-control" readonly>
+                    <input class="form-control" readonly [(ngModel)]="ventaForm.id" name="id">
                 </div> 
             </div>
             <div class="form-group">
@@ -22,7 +24,7 @@
                 <input class="form-control" readonly [(ngModel)]="fecha" name="fechaVenta">
             </div>
             <div class="form-group">
-                <label>Total de Venta</label>
+                <label>Valor Total de Venta</label>
                 <input class="form-control" readonly [(ngModel)]="ventaForm.precioTotalVenta" name="totalVenta">
             </div>
         </div>
@@ -32,9 +34,7 @@
                 <th>Precio</th>
                 <th>Cantidad</th>
                 <th>Total</th>
-                <th>
-                    <a class="btn btn-sm btn-success text-white" (click)="agregarEditarDetalle(null,1)"><i class="fa fa-plus">Agregar Detalle</i></a> 
-                </th>
+                <th>    </th>
             </thead>
             <tbody>
                 <tr *ngIf="detallesVenta.length==0" colspan="5">
@@ -53,7 +53,49 @@
         </table>
 
         <div class="form-group">
-            <button type="submit" class="btn btn-dark"><i class="fa fa-database"></i> Cerrar Venta</button>
+            <button type="submit" class="btn btn-dark" (click)="cerrarVenta()"><i class="fa fa-database"></i> Cerrar Venta</button>
         </div>
     </div>
 </form>
+
+</div>
+
+<div style="width: 200px; margin-left: 30px;">
+    <h3 class="display-4"> Nuevo Detalle </h3>
+    <hr>
+    <form [formGroup]="detalleForm" (submit)="agregarDetalle()">
+        <div class="row">
+          <mat-form-field style="margin-left: 15px;">
+            <mat-select formControlName="producto" placeholder="Producto" [(ngModel)]="newDetalleVenta.producto">
+              <mat-option *ngFor="let producto of productos" [value]="producto">
+                {{producto.nombre}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field style="margin-left: 15px;">
+            <input matInput formControlName="precio" placeholder="Precio" [(ngModel)]="newDetalleVenta.precio" (keyup)="updateTotal()">
+            <mat-error *ngIf="detalleForm.controls['precio'].errors?.required">Se necesita para calcular el total del detalle</mat-error>
+            <mat-error *ngIf="detalleForm.controls['precio'].errors?.pattern">El campo solo acepta numeros</mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="row">
+          <mat-form-field style="margin-left: 15px;">
+            <input matInput formControlName="cantidad" placeholder="Cantidad" [(ngModel)]="newDetalleVenta.cantidadVendida" (keyup)="updateTotal()">
+            <mat-error *ngIf="detalleForm.controls['cantidad'].errors?.required">Se necesita para calcular el total del detalle</mat-error>
+            <mat-error *ngIf="detalleForm.controls['cantidad'].errors?.pattern">El campo solo acepta numeros</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field style="margin-left: 15px;">
+            <mat-label>Total</mat-label>
+            <input matInput formControlName="total" [(ngModel)]="newDetalleVenta.total" readonly style="background-color: rgb(252, 64, 64);">
+          </mat-form-field>
+        </div>
+          <button style="margin-left: 70px;" mat-raised-button color="primary" type="submit" [disabled]="detalleForm.invalid">Agregar Detalle</button>
+        
+      </form>
+</div>
+</div>

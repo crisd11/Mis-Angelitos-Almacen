@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { VentaService } from '../../servicios/venta.service';
-import { NgForm } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Venta } from '../../data-models/venta';
 import { DetalleVenta } from '../../data-models/detalleVenta';
 import { Producto } from '../../data-models/producto';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { DetalleVentaComponent } from '../detalle-venta/detalle-venta.component';
+import { ProductoService } from '../../servicios/producto.service';
+import { Venta_RegistrarRequest } from '../../data-models/request/Venta_RegistrarRequest';
 
 @Component({
   selector: 'app-venta',
@@ -14,63 +16,82 @@ import { DetalleVentaComponent } from '../detalle-venta/detalle-venta.component'
 })
 export class VentaComponent implements OnInit {
 
+  //Venta
   ventaForm: Venta;
   detallesVenta: DetalleVenta[];
   cantidadItems: number;
   totalVenta:number;
   fecha: string;
-  //@ViewChild(DetalleVentaComponent)
-  //private detalleVentaComponent: DetalleVentaComponent;
+  request: Venta_RegistrarRequest;
+
+  // DETALLE
+  detalleForm: FormGroup;
+  newDetalleVenta: DetalleVenta;
+  productos: Producto[];
+  isValid: boolean;
   
-  constructor(private ventaService: VentaService, private dialog: MatDialog) { 
+  constructor(private ventaService: VentaService, private dialog: MatDialog, private productoService: ProductoService) { 
+    //Venta
     this.ventaForm = new Venta();
     this.fecha = new Date().toDateString();
-    //this.ventaForm.fechaVenta =  new Date();
     this.ventaForm.precioTotalVenta = 0;
     this.detallesVenta = [];
     this.cantidadItems = 0;
     this.totalVenta = 0;
-  }
+    this.request = new Venta_RegistrarRequest();
+    this.request.venta = new Venta();
 
-  ngOnInit() {
-  }
+    //Detalle
+    this.newDetalleVenta = new DetalleVenta();
+    this.newDetalleVenta.producto = new Producto();
+    this.newDetalleVenta.id = 0;
 
-  agregarEditarDetalle(detalleIndex: number, ventaId: number){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
-    dialogConfig.disableClose = true;
-    dialogConfig.width = "50%";
-    dialogConfig.data = { detalleIndex, ventaId }
-    this.dialog.open(DetalleVentaComponent, dialogConfig).afterClosed().subscribe(data => {
-      this.detallesVenta.push(data);
-      this.cantidadItems++;
-      this.actualizarTotalVenta();
+    this.productos = [];
+
+    this.detalleForm = new FormGroup({
+      producto: new FormControl('', Validators.required),
+      precio: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
+      cantidad: new FormControl('', [Validators.required, Validators.pattern("^[0-9]*$")]),
+      total: new FormControl(0)
     })
   }
 
-  abrirComponente(){
-    this.detalleVentaComponent.show()
+  ngOnInit() {
+    this.GetProductos();
   }
-  agregarDetalle(event){
-    this.detallesVenta.push(event);
+
+  GetProductos(): void {
+    this.productoService.getProductos().subscribe(resp => {
+      this.productos = resp;
+    })
   }
-  /*resetssForm(form?: NgForm){
-    if(form == null){
-      form.reset();
-      this.ventaService.formData = {
-        id: null,
-        detalleVenta: [],
-        fechaVenta: null,
-        precioTotalVenta:0
-      }
-    }
-  }*/
+
+  agregarDetalle(){
+    this.detallesVenta.push(this.newDetalleVenta);
+    this.cantidadItems++;
+    this.actualizarTotalVenta();
+    this.newDetalleVenta = new DetalleVenta();
+    this.newDetalleVenta.producto = new Producto();
+    this.newDetalleVenta.id = 0;
+  }
+  
   actualizarTotalVenta(){
-    
     this.ventaForm.precioTotalVenta = this.detallesVenta.reduce((prev, curr) => {
       return prev + curr.total;
     },0);
     this.ventaForm.precioTotalVenta = parseFloat(this.ventaForm.precioTotalVenta.toFixed(2));
+  }
+
+  updateTotal(){
+    this.newDetalleVenta.total = parseFloat((this.newDetalleVenta.precio * this.newDetalleVenta.cantidadVendida).toFixed(2));
+  }
+
+  cerrarVenta(){
+    this.request.venta.precioTotalVenta = this.ventaForm.precioTotalVenta;
+    this.ventaService.create(this.request).subscribe(id => {
+      this.ventaForm.id = id;
+      //msj cuando se ingresa correctamente, pasarle los detallesventa y armar ese metodo
+    })
   }
 
 }

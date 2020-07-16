@@ -71,5 +71,46 @@ namespace Mis_Angelitos.BUSINESS
                 _conexion.Close();
             }
         }
+
+        public void Editar(string nombre, int id)
+        {
+            try
+            {
+                _comando.CommandText = "update Marcas set Nombre = @nombre where Id=@id";
+                _comando.Parameters.Clear();
+                _comando.Parameters.AddWithValue("@nombre", nombre);
+                _comando.Parameters.AddWithValue("@id", id);
+                _conexion.Open();
+                _comando.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conexion.Close();
+            }
+        }
+
+        public void Eliminar(int id)
+        {
+            try
+            {
+                _comando.CommandText = "delete from Marcas where Id=@id";
+                _comando.Parameters.Clear();
+                _comando.Parameters.AddWithValue("@id", id);
+                _conexion.Open();
+                _comando.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conexion.Close();
+            }
+        }
     }
 }

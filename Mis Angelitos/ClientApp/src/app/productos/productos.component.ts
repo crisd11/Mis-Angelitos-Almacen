@@ -31,9 +31,10 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
   porUnidad: boolean;
   porUnidadOpciones: string[];
   marcas: Marca[];
+  editarActivo: boolean;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'nombre', 'marca', 'tipoProducto', 'stock', 'porcentajeGanancia', 'historicoVendido'];
+  displayedColumns = ['id', 'nombre', 'marca', 'tipoProducto', 'stock', 'porcentajeGanancia', 'historicoVendido','editar','eliminar'];
 
   constructor(private marcaService: MarcaService, private productoService: ProductoService){
     this.newProducto = new Producto();
@@ -44,6 +45,7 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
     this.tipoProductos = [];
     this.marcas = [];
     this.porUnidadOpciones = [];
+    this.editarActivo = false;
       for(var i=0; i<4 ; i++){
       this.tipoProducto = new TipoProducto();
       this.tipoProducto.id = i;
@@ -83,13 +85,41 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
     })
   }
 
-  Create(){
-    let data = '?nombre=' + this.newProducto.nombre + '&idMarca=' + this.newProducto.marca.id +
-               '&tipoProducto=' + this.newProducto.tipoProducto.id + '&stock=' + this.newProducto.stock + '&porcentaje=' + this.newProducto.porcentajeGanancia;
-      //let data =  '?' + this.newProducto.nombre + '/' + this.newProducto.marca.id +
-      //'/' + this.newProducto.tipoProducto.id + '/' + this.newProducto.stock + '/' + this.newProducto.porcentajeGanancia;
+  create(){
+    let data = '?nombre=' + this.newProducto.nombre + '&idMarca=' + this.newProducto.marca.id + '&tipoProducto=' 
+    + this.newProducto.tipoProducto.id + '&stock=' + this.newProducto.stock + '&porcentaje=' + this.newProducto.porcentajeGanancia;
       
     this.productoService.create(data).subscribe(resp => {  
+      this.GetProductos();
+      this.form.reset();
+    })
+  }
+
+  editar(producto: Producto){
+    this.newProducto.nombre = producto.nombre;
+    this.newProducto.id = producto.id;
+    this.newProducto.marca.id = producto.marca.id;
+    this.newProducto.stock = producto.stock;
+    this.newProducto.porcentajeGanancia = producto.porcentajeGanancia;
+    this.newProducto.tipoProducto.id = producto.tipoProducto.id;
+    this.editarActivo = true;
+  }
+
+  editarProducto(){
+    let data = '?id=' + this.newProducto.id + '&nombre=' + this.newProducto.nombre + '&idMarca=' + this.newProducto.marca.id +
+    '&tipoProducto=' + this.newProducto.tipoProducto.id + '&stock=' + this.newProducto.stock + '&porcentaje=' + this.newProducto.porcentajeGanancia;
+    if(this.editarActivo){
+      this.productoService.edit(data).subscribe(resp => {  
+        this.GetProductos();
+        this.editarActivo = false;
+        this.form.reset();
+      })
+    }
+  }
+
+  eliminar(id: number){
+    let data = '?id=' + id;
+    this.productoService.delete(data).subscribe(resp => {  
       this.GetProductos();
     })
   }

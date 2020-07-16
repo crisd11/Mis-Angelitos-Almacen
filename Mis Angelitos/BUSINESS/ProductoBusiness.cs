@@ -94,5 +94,51 @@ namespace Mis_Angelitos.BUSINESS
                 _conexion.Close();
             }
         }
+
+        public void Editar(int id, string nombre, int idMarca, int tipoProducto, float stock, float porcentaje)
+        {
+            try
+            {
+                _comando.CommandText = "update Productos set Nombre = @nombre, IdMarca = @idMarca, TipoProducto = @tipoProducto," +
+                    "Stock = @stock, PorcentajeGanancia = @porcentajeGanancia where Id=@id";
+                _comando.Parameters.Clear();
+                _comando.Parameters.AddWithValue("@id", id);
+                _comando.Parameters.AddWithValue("@nombre", nombre);
+                _comando.Parameters.AddWithValue("@idMarca", idMarca);
+                _comando.Parameters.AddWithValue("@tipoProducto", tipoProducto);
+                _comando.Parameters.AddWithValue("@stock", stock);
+                _comando.Parameters.AddWithValue("@porcentajeGanancia", porcentaje);
+                _conexion.Open();
+                _comando.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conexion.Close();
+            }
+        }
+
+        public void Eliminar(int id)
+        {
+            try
+            {
+                _comando.CommandText = "delete from Productos where Id=@id";
+                _comando.Parameters.Clear();
+                _comando.Parameters.AddWithValue("@id", id);
+                _conexion.Open();
+                _comando.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conexion.Close();
+            }
+        }
     }
 }

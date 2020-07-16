@@ -1,6 +1,7 @@
 ﻿using Mis_Angelitos.DOMAIN;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,22 +22,28 @@ namespace Mis_Angelitos.BUSINESS
             _comando.Connection = _conexion;
         }
 
-        public void Create(string nombre, int idMarca, int tipoProducto, float stock, float porcentaje)
+        public int RegistrarVenta(List<DetalleVenta> detalleVentas, Venta venta)
         {
             try
             {
-                _comando.CommandText = "insert into Productos values (@nombre, @idMarca, @tipoProducto, @stock, @porcentajeGanancia, @porUnidad, @HistoricoVendido)";
-                _comando.Parameters.Clear();
-                _comando.Parameters.AddWithValue("@nombre", nombre);
-                _comando.Parameters.AddWithValue("@idMarca", idMarca);
-                _comando.Parameters.AddWithValue("@tipoProducto", tipoProducto);
-                _comando.Parameters.AddWithValue("@stock", stock);
-                _comando.Parameters.AddWithValue("@porcentajeGanancia", porcentaje);
-                _comando.Parameters.AddWithValue("@porUnidad", true);
-                _comando.Parameters.AddWithValue("@HistoricoVendido", 0);
+                string procedure = "Venta_Insert";
+                var command = new SqlCommand(procedure, _conexion);
+                command.CommandType = CommandType.StoredProcedure;
+                SqlParameter param;
+
+                param = command.Parameters.Add("@Fecha", SqlDbType.Date);
+                param.Value = DateTime.Now;
+
+                param = command.Parameters.Add("@PrecioTotal", SqlDbType.Real);
+                param.Value = venta.PrecioTotalVenta;
+
+                param = command.Parameters.Add("@Id", SqlDbType.Int);
+                param.Direction = ParameterDirection.Output;
 
                 _conexion.Open();
-                _comando.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+
+                return (int)param.Value;
             }
             catch (Exception ex)
             {
@@ -46,6 +53,11 @@ namespace Mis_Angelitos.BUSINESS
             {
                 _conexion.Close();
             }
+        }
+
+        public void RegistrarDetalles()
+        {
+
         }
 
         public List<Venta> GetVentas()

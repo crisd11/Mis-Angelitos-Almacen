@@ -18,6 +18,14 @@ export class MarcaService {
     return this.httpClient.post('https://localhost:44365/marcas/create/'+ nombre, null);
   }
 
+  public edit(data: string): Observable<any> {
+    return this.httpClient.post('https://localhost:44365/marcas/edit'+ data, null);
+  }
+
+  public delete(data: string): Observable<any> {
+    return this.httpClient.post('https://localhost:44365/marcas/delete'+ data, null);
+  }
+
  /* public post<T>(route: string, body: any): Observable<Response<T>> {
 		return this.httpClient.post(this.url + route, body, { withCredentials: true })
 			.pipe(
