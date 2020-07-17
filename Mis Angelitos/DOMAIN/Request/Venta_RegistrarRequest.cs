@@ -9,6 +9,6 @@ namespace Mis_Angelitos.DOMAIN.Request
     public class Venta_RegistrarRequest
     {
         public List<DetalleVenta> DetalleVentas { get; set; }
-        public Venta Venta { get; set; }
+        public int PrecioTotalVenta { get; set; }
     }
 }

@@ -4,14 +4,17 @@
     <div style="width: 30%; margin: 0px; background-color: aqua; height: 130px;">
       <h5>Filtros</h5>
       <label>Nombre:</label>
-      <input [(ngModel)]="productoFilter" maxlength="50">
-      <label class="">TipoProducto: </label>
-          <select [(ngModel)]="idTipoFilter" style="width: 100px;">
+      <input [(ngModel)]="filtroNombre" maxlength="50">
+      <label>TipoProducto: </label>
+          <select [(ngModel)]="filtroTipoProducto" style="width: 100px;">
             <option *ngFor='let tipo of tipoProductos' [ngValue]="tipo.id">
                 {{tipo.nombre}}
             </option>
           </select>
-          <button>Buscar</button>
+        <div class="row" style="margin-left: 40px;">
+          <button (click)="getByFiltros()">Buscar</button>
+          <button style="margin-left: 15px;" (click)="GetProductos()">Reset</button>
+        </div>
     </div>
     <div style="width: 60%; margin-left: 100px; background-color: aqua;">
       <form [formGroup]="form">

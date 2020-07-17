@@ -22,7 +22,7 @@ namespace Mis_Angelitos.BUSINESS
             _comando.Connection = _conexion;
         }
 
-        public int RegistrarVenta(List<DetalleVenta> detalleVentas, Venta venta)
+        public int RegistrarVenta(int PrecioTotalVenta)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace Mis_Angelitos.BUSINESS
                 param.Value = DateTime.Now;
 
                 param = command.Parameters.Add("@PrecioTotal", SqlDbType.Real);
-                param.Value = venta.PrecioTotalVenta;
+                param.Value = PrecioTotalVenta;
 
                 param = command.Parameters.Add("@Id", SqlDbType.Int);
                 param.Direction = ParameterDirection.Output;
@@ -44,6 +44,7 @@ namespace Mis_Angelitos.BUSINESS
                 command.ExecuteNonQuery();
 
                 return (int)param.Value;
+
             }
             catch (Exception ex)
             {
@@ -55,9 +56,46 @@ namespace Mis_Angelitos.BUSINESS
             }
         }
 
-        public void RegistrarDetalles()
+        public void RegistrarDetalles(int idVenta, int idProducto, int cantidadVendida, int precio)
         {
+            try
+            {
+                    _comando.CommandText = "insert into DetalleVenta values (@idProducto, @cantidadVendida, @precio, @idVenta)";
+                    _comando.Parameters.Clear();
+                    _comando.Parameters.AddWithValue("@idProducto", idProducto);
+                    _comando.Parameters.AddWithValue("@cantidadVendida", cantidadVendida);
+                    _comando.Parameters.AddWithValue("@precio", precio);
+                    _comando.Parameters.AddWithValue("@idVenta", idVenta);
 
+                    _conexion.Open();
+                    _comando.ExecuteNonQuery();
+                    _conexion.Close();
+
+                _comando.CommandText = "update Productos set Stock = Stock - @cantidadVendida where Id = @id";
+                _comando.Parameters.Clear();
+                _comando.Parameters.AddWithValue("@id", idProducto);
+                _comando.Parameters.AddWithValue("@cantidadVendida", cantidadVendida);
+
+                _conexion.Open();
+                _comando.ExecuteNonQuery();
+                _conexion.Close();
+
+                _comando.CommandText = "update Productos set HistoricoVendido = HistoricoVendido + @cantidadVendida where Id = @id";
+                _comando.Parameters.Clear();
+                _comando.Parameters.AddWithValue("@id", idProducto);
+                _comando.Parameters.AddWithValue("@cantidadVendida", cantidadVendida);
+
+                _conexion.Open();
+                _comando.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conexion.Close();
+            }
         }
 
         public List<Venta> GetVentas()

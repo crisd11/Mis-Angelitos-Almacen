@@ -28,8 +28,9 @@ export class VentaComponent implements OnInit {
   detalleForm: FormGroup;
   newDetalleVenta: DetalleVenta;
   productos: Producto[];
-  isValid: boolean;
-  
+  editarActivo: boolean;
+  editIndex: number;
+
   constructor(private ventaService: VentaService, private dialog: MatDialog, private productoService: ProductoService) { 
     //Venta
     this.ventaForm = new Venta();
@@ -40,12 +41,14 @@ export class VentaComponent implements OnInit {
     this.totalVenta = 0;
     this.request = new Venta_RegistrarRequest();
     this.request.venta = new Venta();
+    this.request.detalleVentas = [];
 
     //Detalle
     this.newDetalleVenta = new DetalleVenta();
     this.newDetalleVenta.producto = new Producto();
     this.newDetalleVenta.id = 0;
-
+    this.editarActivo = false;
+    this.editIndex = 99;
     this.productos = [];
 
     this.detalleForm = new FormGroup({
@@ -67,12 +70,19 @@ export class VentaComponent implements OnInit {
   }
 
   agregarDetalle(){
-    this.detallesVenta.push(this.newDetalleVenta);
-    this.cantidadItems++;
-    this.actualizarTotalVenta();
-    this.newDetalleVenta = new DetalleVenta();
-    this.newDetalleVenta.producto = new Producto();
-    this.newDetalleVenta.id = 0;
+    if(this.newDetalleVenta.producto.stock >= this.newDetalleVenta.cantidadVendida){
+      this.detallesVenta.push(this.newDetalleVenta);
+      this.cantidadItems++;
+      this.actualizarTotalVenta();
+      this.newDetalleVenta = new DetalleVenta();
+      this.newDetalleVenta.producto = new Producto();
+      this.newDetalleVenta.id = 0;
+    }
+    else{
+      let stock = this.newDetalleVenta.producto.stock;
+      alert("Solo quedan " + stock + " unidades de ese producto disponibles");
+    }
+    
   }
   
   actualizarTotalVenta(){
@@ -86,11 +96,54 @@ export class VentaComponent implements OnInit {
     this.newDetalleVenta.total = parseFloat((this.newDetalleVenta.precio * this.newDetalleVenta.cantidadVendida).toFixed(2));
   }
 
+  editar(detalle: DetalleVenta, index: number){
+    this.newDetalleVenta.cantidadVendida = detalle.cantidadVendida;
+    this.newDetalleVenta.nombre = detalle.nombre;
+    this.newDetalleVenta.precio = detalle.precio;
+    this.newDetalleVenta.producto = detalle.producto;
+    this.newDetalleVenta.total = detalle.total;
+    this.editarActivo = true;
+    this.editIndex = index;
+  }
+
+  editarDetalle(){
+    this.detallesVenta[this.editIndex].cantidadVendida = this.newDetalleVenta.cantidadVendida;
+    this.detallesVenta[this.editIndex].precio = this.newDetalleVenta.precio;
+    this.detallesVenta[this.editIndex].total = this.newDetalleVenta.total;
+    this.detallesVenta[this.editIndex].producto = this.newDetalleVenta.producto;
+    this.actualizarTotalVenta();
+    this.editIndex = 99;
+    this.detalleForm.reset();
+    this.editarActivo = false;
+  }
+
+  eliminar(index: number){
+    this.detallesVenta.splice(index,1);
+    this.detalleForm.reset();
+    this.editarActivo = false;
+    this.cantidadItems = this.cantidadItems - 1;
+    this.actualizarTotalVenta();
+  }
+
   cerrarVenta(){
-    this.request.venta.precioTotalVenta = this.ventaForm.precioTotalVenta;
-    this.ventaService.create(this.request).subscribe(id => {
+    let data = '?precioTotalVenta=' + this.ventaForm.precioTotalVenta;
+
+    this.ventaService.createVenta(data).subscribe(id => {
       this.ventaForm.id = id;
-      //msj cuando se ingresa correctamente, pasarle los detallesventa y armar ese metodo
+      for(let i in this.detallesVenta){
+        var detalle = this.detallesVenta[i];
+        let datos = '?idVenta=' + this.ventaForm.id + '&idProducto=' + detalle.producto.id + 
+                  '&cantidadVendida=' + detalle.cantidadVendida + '&precio=' + detalle.precio;
+
+        this.ventaService.createDetalle(datos).subscribe(resp => {
+          alert("Venta registrada con exito");
+          this.detallesVenta = [];
+          this.ventaForm.id = 0;
+          this.ventaForm.precioTotalVenta = 0;
+          this.cantidadItems = 0;
+          this.GetProductos();
+        });
+      }
     })
   }
 

@@ -22,6 +22,10 @@ export class MarcaService {
     return this.httpClient.post('https://localhost:44365/marcas/edit'+ data, null);
   }
 
+  public getByNombre(data: string): Observable<any> {
+    return this.httpClient.get('https://localhost:44365/marcas/getbynombre'+ data);
+  }
+
   public delete(data: string): Observable<any> {
     return this.httpClient.post('https://localhost:44365/marcas/delete'+ data, null);
   }

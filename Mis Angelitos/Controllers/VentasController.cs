@@ -28,11 +28,18 @@ namespace Mis_Angelitos.Controllers
             return _ventasBusiness.GetVentas();
         }
 
-        [Route("create")]
+        [Route("createventa")]
         [HttpPost]
-        public void Create(Venta_RegistrarRequest request)
+        public int CreateVenta([FromQuery] int precioTotalVenta)
         {
-            _ventasBusiness.RegistrarVenta(request.DetalleVentas, request.Venta);
+            return _ventasBusiness.RegistrarVenta(precioTotalVenta);
+        }
+
+        [Route("createdetalle")]
+        [HttpPost]
+        public void CreateDetalle([FromQuery] int idVenta, [FromQuery] int idProducto, [FromQuery] int cantidadVendida, [FromQuery] int precio)
+        {
+            _ventasBusiness.RegistrarDetalles(idVenta, idProducto, cantidadVendida, precio);
         }
     }
 }

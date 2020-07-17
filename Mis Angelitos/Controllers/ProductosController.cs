@@ -27,6 +27,13 @@ namespace Mis_Angelitos.Controllers
             return _productosBusiness.GetProductos();
         }
 
+        [Route("getbyfiltros")]
+        [HttpGet]
+        public IEnumerable<Producto> GetByFiltros([FromQuery] string nombre, [FromQuery] int tipoProducto)
+        {
+            return _productosBusiness.GetByFiltros(nombre,tipoProducto);
+        }
+
         [Route("create")]
         [HttpPost]
         public void Create([FromQuery]string nombre, [FromQuery]int idMarca, [FromQuery]int tipoProducto, [FromQuery]float stock, [FromQuery]float porcentaje)

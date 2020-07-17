@@ -72,6 +72,43 @@ namespace Mis_Angelitos.BUSINESS
             }
         }
 
+        public List<Marca> GetByNombre(string nombre)
+        {
+            List<Marca> marcas = new List<Marca>();
+            Marca marca;
+            if(nombre == null)
+            {
+                nombre = "";
+            }
+
+            try
+            {
+                _comando.CommandText = "select * from Marcas where Nombre like '%'+@nombre+'%'";
+                _comando.Parameters.Clear();
+                _comando.Parameters.AddWithValue("@nombre", nombre);
+                _conexion.Open();
+                _lector = _comando.ExecuteReader();
+
+                while (_lector.Read())
+                {
+                    marca = new Marca();
+                    marca.Id = _lector.GetInt32(0);
+                    marca.Nombre = _lector["Nombre"].ToString();
+
+                    marcas.Add(marca);
+                }
+                return marcas;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _conexion.Close();
+            }
+        }
+
         public void Editar(string nombre, int id)
         {
             try

@@ -21,6 +21,14 @@ export class VentaService {
         });
   }
 
+  public createVenta(data: string): Observable<any> {
+    return this.httpClient.post('https://localhost:44365/ventas/createventa' + data, null);
+  }
+
+  public createDetalle(data: string): Observable<any> {
+    return this.httpClient.post('https://localhost:44365/ventas/createdetalle' + data, null);
+  }
+
   private postResponseJson(res: Response) {
     return res || {};
   }

@@ -27,6 +27,13 @@ namespace Mis_Angelitos.Controllers
             return _marcasBusiness.GetMarcas();
         }
 
+        [Route("getbynombre")]
+        [HttpGet]
+        public IEnumerable<Marca> GetByNombre([FromQuery] string nombre)
+        {
+            return _marcasBusiness.GetByNombre(nombre);
+        }
+
         [Route("create/{nombre}")]
         [HttpPost]
         public void Create(string nombre) 

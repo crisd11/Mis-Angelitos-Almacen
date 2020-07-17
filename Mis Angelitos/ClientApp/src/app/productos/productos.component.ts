@@ -32,6 +32,8 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
   porUnidadOpciones: string[];
   marcas: Marca[];
   editarActivo: boolean;
+  filtroTipoProducto: number;
+  filtroNombre: string;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'nombre', 'marca', 'tipoProducto', 'stock', 'porcentajeGanancia', 'historicoVendido','editar','eliminar'];
@@ -46,6 +48,9 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
     this.marcas = [];
     this.porUnidadOpciones = [];
     this.editarActivo = false;
+    this.filtroTipoProducto = 0;
+    this.filtroNombre = '';
+
       for(var i=0; i<4 ; i++){
       this.tipoProducto = new TipoProducto();
       this.tipoProducto.id = i;
@@ -85,6 +90,13 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
     })
   }
 
+  getByFiltros(){
+    let data = '?nombre=' + this.filtroNombre + '&tipoProducto=' + this.filtroTipoProducto;
+    this.productoService.getByFiltros(data).subscribe(productos => {
+      this.productos = productos;
+    })
+  }
+
   create(){
     let data = '?nombre=' + this.newProducto.nombre + '&idMarca=' + this.newProducto.marca.id + '&tipoProducto=' 
     + this.newProducto.tipoProducto.id + '&stock=' + this.newProducto.stock + '&porcentaje=' + this.newProducto.porcentajeGanancia;
@@ -92,6 +104,7 @@ export class ProductosComponent implements OnInit { //AfterViewInit, OnInit
     this.productoService.create(data).subscribe(resp => {  
       this.GetProductos();
       this.form.reset();
+      alert("Producto agregado con exito");
     })
   }
 

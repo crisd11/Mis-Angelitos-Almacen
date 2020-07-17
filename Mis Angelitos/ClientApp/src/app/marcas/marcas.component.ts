@@ -14,11 +14,13 @@ export class MarcasComponent implements OnInit {
   idMarcaToEdit: number;
   marcas: Marca[];
   displayedColumns = ['id','nombre','editar','eliminar'];
+  filtroBuscar: string;
 
   constructor(private marcaService: MarcaService) { 
     this.marcaToInsert = "";
     this.marcas = [];
     this.idMarcaToEdit = 0;
+    this.filtroBuscar = '';
   }
 
   ngOnInit(){
@@ -61,6 +63,13 @@ export class MarcasComponent implements OnInit {
     let data = '?id=' + id;
     this.marcaService.delete(data).subscribe(resp => {  
       this.getMarcas();
+    })
+  }
+
+  getByNombre(){
+    let data = '?nombre=' + this.filtroBuscar;
+    this.marcaService.getByNombre(data).subscribe(marcas => {
+      this.marcas = marcas;
     })
   }
 }

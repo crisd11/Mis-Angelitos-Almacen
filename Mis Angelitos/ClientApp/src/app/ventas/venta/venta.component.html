@@ -35,6 +35,7 @@
                 <th>Cantidad</th>
                 <th>Total</th>
                 <th>    </th>
+                <th>    </th>
             </thead>
             <tbody>
                 <tr *ngIf="detallesVenta.length==0" colspan="5">
@@ -47,7 +48,8 @@
                     <td>{{detalle.precio}}</td>
                     <td>{{detalle.cantidadVendida}}</td>
                     <td>{{detalle.total}}</td>
-                    <td><a class="btn btn-sm btn-info text-white" (click)="agregarEditarDetalle(i,1)"><i class="fa fa-pencil">Editar Detalle</i></a></td>
+                    <td><a class="btn btn-sm btn-info text-white" (click)="editar(detalle,i)"><i class="fa fa-pencil">Editar</i></a></td>
+                    <td><a class="btn btn-sm btn-danger text-white" (click)="eliminar(i)"><i class="fa fa-pencil">Eliminar</i></a></td>
                 </tr>
             </tbody>
         </table>
@@ -60,10 +62,11 @@
 
 </div>
 
-<div style="width: 200px; margin-left: 30px;">
-    <h3 class="display-4"> Nuevo Detalle </h3>
+<div style="width: 330px; margin-left: 50px;">
+    <h2 *ngIf="!editarActivo" class="display-4"> Nuevo Detalle </h2>
+    <h2 *ngIf="editarActivo" class="display-4"> Modificar Detalle </h2>
     <hr>
-    <form [formGroup]="detalleForm" (submit)="agregarDetalle()">
+    <form [formGroup]="detalleForm">
         <div class="row">
           <mat-form-field style="margin-left: 15px;">
             <mat-select formControlName="producto" placeholder="Producto" [(ngModel)]="newDetalleVenta.producto">
@@ -94,8 +97,8 @@
             <input matInput formControlName="total" [(ngModel)]="newDetalleVenta.total" readonly style="background-color: rgb(252, 64, 64);">
           </mat-form-field>
         </div>
-          <button style="margin-left: 70px;" mat-raised-button color="primary" type="submit" [disabled]="detalleForm.invalid">Agregar Detalle</button>
-        
+          <button style="margin-left: 70px;" *ngIf="!editarActivo" mat-raised-button color="primary" (click)="agregarDetalle()" [disabled]="detalleForm.invalid">Agregar Detalle</button>
+          <button style="margin-left: 70px;" *ngIf="editarActivo" mat-raised-button color="secondary" (click)="editarDetalle()" [disabled]="detalleForm.invalid">Modificar Detalle</button>
       </form>
 </div>
 </div>

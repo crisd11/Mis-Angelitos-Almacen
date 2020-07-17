@@ -3,8 +3,9 @@
 <div class="row" style="width: 90%;">
     <div style="width: 30%;">
         <h5>Busqueda por Nombre</h5>
-        <input>
-        <button>Buscar</button>
+        <input [(ngModel)]="filtroBuscar">
+        <button (click)="getByNombre()">Buscar</button>
+        <button (click)="getMarcas()">Reset Filtro</button>
     </div>
     <div style="width: 60%;">
         <h5>Crear Marca</h5>
